@@ -13,12 +13,25 @@ const wait = (ms) =>
         }, ms);
     });
 
-const time = Math.random() * 10;
-const time_miles = Math.round(time * 1000);
-const TimeJob = async () => {
-    await wait(time_miles);
-    return time_miles;
+const TimeJob = async (ms) => {
+    await wait(ms);
+    return ms;
 }
+app.post('/api/courses', (req, res) => {
+    const time = Math.random() * 10;
+    const time_miles = Math.round(time * 1000);
+    let course = {
+        id: courses.length + 1,
+        name: 'course' + (courses.length + 1),
+    }
+    courses.push(course);
+    TimeJob(time_miles)
+        .then((result) => {
+            console.log('test time:' + result + 'ms');
+            res.status(201).send('Successfully established');
+        });
+});
+
 
 app.get('/', (req, res) => {
     console.log('index');
@@ -31,19 +44,7 @@ app.get('/api/courses/:id', (req, res) => {
     );
     res.send(course);
 });
-app.post('/api/courses', (req, res) => {
 
-    let course = {
-        id: courses.length + 1,
-        name: 'course' + (courses.length + 1),
-    }
-    courses.push(course);
-    TimeJob()
-        .then((result) => {
-            console.log('test time:' + result + 'ms');
-            res.status(201).send('Successfully established');
-        });
-});
 app.listen(3000, () => {
     console.log('My Node is listening on port 3000!');
 }); 
